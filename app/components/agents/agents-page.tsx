@@ -41,11 +41,10 @@ export function AgentsPage({ agents }: AgentsPageProps) {
         <div className="mb-12 text-center">
           <h1 className="text-foreground text-sm font-medium">Agents</h1>
           <div className="text-foreground mx-auto my-4 max-w-2xl text-3xl font-medium tracking-tight md:text-5xl">
-            Your every day AI assistant
+            Demo Hospital AI assistant
           </div>
           <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-            a growing set of personal AI agents, built for ideas, writing, and
-            product work.
+            a central for hospital AI, built for you.
           </p>
         </div>
 
@@ -127,7 +126,7 @@ export function AgentsPage({ agents }: AgentsPageProps) {
                 description={agent.description}
                 avatar_url={agent.avatar_url}
                 example_inputs={agent.example_inputs || []}
-                creator_id={agent.creator_id || "Zola"}
+                creator_id={agent.creator_id || "invitrace"}
                 isAvailable={true}
                 agents={agents}
                 onAgentClick={handleAgentClick}
