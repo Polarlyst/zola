@@ -107,7 +107,7 @@ export function ModelSelector({
           <div className="text-muted-foreground flex items-center justify-between px-2 py-1.5 text-sm font-medium">
             <span>Pro Models</span>
             <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700 dark:bg-slate-900 dark:text-slate-300">
-              5 free per day
+              Pro
             </span>
           </div>
           {MODELS_PRO.map(renderModelItem)}
