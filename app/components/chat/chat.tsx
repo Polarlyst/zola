@@ -412,7 +412,7 @@ export function Chat() {
           systemPrompt={systemPrompt}
           stop={stop}
           status={status}
-          placeholder={"Ask Zola anything"}
+          placeholder={"Ask Central anything"}
         />
       </motion.div>
       <FeedbackWidget authUserId={user?.id} />
