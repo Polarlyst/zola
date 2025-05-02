@@ -23,12 +23,12 @@ import {
 import { openproviders, OpenProvidersOptions } from "./openproviders"
 import { SupportedModel } from "./openproviders/types"
 
-export const NON_AUTH_DAILY_MESSAGE_LIMIT = 5
+export const NON_AUTH_DAILY_MESSAGE_LIMIT = 500
 export const AUTH_DAILY_MESSAGE_LIMIT = 10000
-export const REMAINING_QUERY_ALERT_THRESHOLD = 2
-export const DAILY_FILE_UPLOAD_LIMIT = 5
-export const DAILY_SPECIAL_AGENT_LIMIT = 2
-export const DAILY_LIMIT_PRO_MODELS = 5
+export const REMAINING_QUERY_ALERT_THRESHOLD = 200
+export const DAILY_FILE_UPLOAD_LIMIT = 0
+export const DAILY_SPECIAL_AGENT_LIMIT = 200
+export const DAILY_LIMIT_PRO_MODELS = 500
 
 export type Model = {
   id: string
