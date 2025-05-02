@@ -5,27 +5,26 @@ export function AppInfoContent() {
   return (
     <div className="space-y-4">
       <p className="text-foreground leading-relaxed">
-        {APP_DESCRIPTION} Built with Vercel's AI SDK, Supabase, and prompt-kit
-        components.
+        {APP_DESCRIPTION} Demo by Invitrace.
       </p>
       <p className="text-foreground leading-relaxed">
-        The code is available on{" "}
+        Contact {" "}
         <a
-          href="https://github.com/ibelick/zola"
+          href="https://www.linkedin.com/in/dhouch/"
           target="_blank"
           rel="noopener noreferrer"
           className="underline"
         >
-          GitHub
+          Us
         </a>
         . Made by{" "}
         <a
-          href="https://twitter.com/ibelick"
+          href="https://www.linkedin.com/in/dhouch/"
           target="_blank"
           rel="noopener noreferrer"
           className="underline"
         >
-          @ibelick
+          @ibelick & @Pang
         </a>
         .
       </p>
