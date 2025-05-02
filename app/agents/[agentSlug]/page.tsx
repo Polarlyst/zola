@@ -42,7 +42,7 @@ export default async function AgentIdPage({
             name={agent.name}
             description={agent.description}
             example_inputs={agent.example_inputs || []}
-            creator_id={agent.creator_id || "Zola"}
+            creator_id={agent.creator_id || "Invitarce"}
             avatar_url={agent.avatar_url}
             randomAgents={agents || []}
             isFullPage
