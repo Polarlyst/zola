@@ -52,7 +52,7 @@ export const MODELS_FREE = [
     features: [
       {
         id: "file-upload",
-        enabled: true,
+        enabled: false,
       },
     ],
     api_sdk: "deepseek/deepseek-r1:free", // this is a special case for openrouter
@@ -67,7 +67,7 @@ export const MODELS_FREE = [
     features: [
       {
         id: "file-upload",
-        enabled: true,
+        enabled: false,
       },
     ],
     api_sdk: openproviders("pixtral-large-latest"),
@@ -116,7 +116,7 @@ export const MODELS_PRO = [
     features: [
       {
         id: "file-upload",
-        enabled: true,
+        enabled: false,
       },
     ],
     api_sdk: openproviders("gpt-4.1"),
@@ -131,7 +131,7 @@ export const MODELS_PRO = [
     features: [
       {
         id: "file-upload",
-        enabled: true,
+        enabled: false,
       },
     ],
     api_sdk: openproviders("gpt-4.1-mini"),
@@ -161,7 +161,7 @@ export const MODELS_PRO = [
     features: [
       {
         id: "file-upload",
-        enabled: true,
+        enabled: false,
       },
     ],
     api_sdk: openproviders("gemini-2.5-pro-exp-03-25"),
@@ -232,7 +232,7 @@ export const MODELS_PRO = [
     features: [
       {
         id: "file-upload",
-        enabled: true,
+        enabled: false,
       },
     ],
     api_sdk: openproviders("claude-3-5-haiku-20241022"),
@@ -247,7 +247,7 @@ export const MODELS_PRO = [
     features: [
       {
         id: "file-upload",
-        enabled: true,
+        enabled: false,
       },
     ],
     api_sdk: openproviders("claude-3-opus-20240229"),
@@ -436,10 +436,10 @@ export const ZOLA_SPECIAL_AGENTS_SLUGS = ["research"]
 
 export const ZOLA_COMING_SOON_AGENTS = [
   {
-    name: "GitHub Agent",
-    slug: "github-agent",
+    name: "Wellposttrack",
+    slug: "Wellposttrack",
     description:
-      "Summarizes PRs, reviews diffs, and writes release notes using the GitHub API.",
+      "Analyze Office syndrome with Wellposttrack",
     avatar_url: null,
     system_prompt: "",
     model_preference: "gpt-4o-mini",
@@ -453,71 +453,6 @@ export const ZOLA_COMING_SOON_AGENTS = [
     tags: ["dev", "github", "tools"],
     category: "dev",
     id: "github-agent",
-    creator_id: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    name: "Linear Agent",
-    slug: "linear-agent",
-    description: "Create, search, and prioritize issues using the Linear API.",
-    system_prompt: "",
-    model_preference: "gpt-4o-mini",
-    avatar_url: null,
-    is_public: false,
-    remixable: false,
-    tools_enabled: true,
-    example_inputs: [
-      "Create a bug in project X: login form fails on mobile",
-      "List urgent issues in roadmap",
-    ],
-    tags: ["product", "tools", "linear"],
-    category: "b2b",
-    id: "linear-agent",
-    creator_id: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    name: "Changelog Writer",
-    slug: "changelog-writer",
-    description:
-      "Turns PRs or issue lists into structured changelogs and release notes.",
-    system_prompt: "",
-    model_preference: "gpt-4o-mini",
-    avatar_url: null,
-    is_public: false,
-    remixable: false,
-    tools_enabled: true,
-    example_inputs: [
-      "Generate a changelog from these PR titles",
-      "Write release notes for version 2.3",
-    ],
-    tags: ["dev", "pm", "changelog"],
-    category: "dev",
-    id: "changelog-writer",
-    creator_id: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    name: "Growth Analyst",
-    slug: "growth-analyst",
-    description:
-      "Answers product and growth questions by analyzing metrics and user behavior.",
-    system_prompt: "",
-    model_preference: "gpt-4o-mini",
-    avatar_url: null,
-    is_public: false,
-    remixable: false,
-    tools_enabled: true,
-    example_inputs: [
-      "What changed after the onboarding redesign?",
-      "How are weekly active users trending?",
-    ],
-    tags: ["analytics", "product", "b2b"],
-    category: "analytics",
-    id: "growth-analyst",
     creator_id: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
