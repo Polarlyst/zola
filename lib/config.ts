@@ -323,10 +323,10 @@ export const PROVIDERS = [
 
 export const MODEL_DEFAULT = "pixtral-large-latest"
 
-export const APP_NAME = "Zola"
+export const APP_NAME = "Central"
 export const APP_DOMAIN = "https://zola.chat"
 export const APP_DESCRIPTION =
-  "Zola is a free, open-source AI chat app with multi-model support."
+  "Project : Central for hostpital"
 
 import {
   Calendar, // ตัวอย่างไอคอน
@@ -453,7 +453,7 @@ export const ZOLA_COMING_SOON_AGENTS = [
     tags: ["dev", "github", "tools"],
     category: "dev",
     id: "github-agent",
-    creator_id: Invitrace,
+    creator_id: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -474,7 +474,7 @@ export const ZOLA_COMING_SOON_AGENTS = [
     tags: ["product", "tools", "linear"],
     category: "b2b",
     id: "linear-agent",
-    creator_id: Invitrace,
+    creator_id: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -496,7 +496,7 @@ export const ZOLA_COMING_SOON_AGENTS = [
     tags: ["dev", "pm", "changelog"],
     category: "dev",
     id: "changelog-writer",
-    creator_id: Invitrace,
+    creator_id: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -518,7 +518,7 @@ export const ZOLA_COMING_SOON_AGENTS = [
     tags: ["analytics", "product", "b2b"],
     category: "analytics",
     id: "growth-analyst",
-    creator_id: Invitrace,
+    creator_id: null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
