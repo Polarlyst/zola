@@ -328,92 +328,82 @@ export const APP_DOMAIN = "https://zola.chat"
 export const APP_DESCRIPTION =
   "Zola is a free, open-source AI chat app with multi-model support."
 
+import {
+  Calendar, // ตัวอย่างไอคอน
+  HelpCircle, // ตัวอย่างไอคอน
+  Phone, // ตัวอย่างไอคอน
+  Clipboard, // ตัวอย่างไอคอน
+  MapPin, // ตัวอย่างไอคอน
+  // เพิ่มไอคอนอื่น ๆ ที่จำเป็นได้
+} from "lucide-react"; // สมมติว่าใช้ lucide-react หรือไลบรารีไอคอนอื่น ๆ
+
 export const SUGGESTIONS = [
   {
-    label: "Summary",
-    highlight: "Summarize",
-    prompt: `Summarize`,
+    label: "นัดหมาย", // Appointments
+    highlight: "นัดหมายสำหรับ", // Appointment for
+    prompt: `ช่วยเรื่องการนัดหมายสำหรับ`, // Help with appointment for
     items: [
-      "Summarize the French Revolution",
-      "Summarize the plot of Inception",
-      "Summarize World War II in 5 sentences",
-      "Summarize the benefits of meditation",
+      "ทำนัดผู้ป่วยใหม่กับแพทย์หญิง อัญญา ชาร์มา", // Schedule a new patient appointment with Dr. Anya Sharma
+      "เลื่อนนัดติดตามผลของ มาเรีย การ์เซีย เป็นวันพฤหัสหน้า", // Reschedule Maria Garcia's follow-up for next Thursday
+      "ตรวจสอบตารางว่างของแพทย์เชน เช้าวันจันทร์", // Check Dr. Chen's availability on Monday morning
+      "ยกเลิกนัดเวลา 14:00 น. ของ เดวิด ลี", // Cancel the 2 PM appointment for David Lee
+      "ยืนยันรายละเอียดนัดหมายสำหรับผู้ป่วย จอห์น สมิธ, ว/ด/ป เกิด 15/03/1975", // Confirm appointment details for patient John Smith, DOB 03/15/1975
     ],
-    icon: Notepad,
+    icon: Calendar,
   },
   {
-    label: "Code",
-    highlight: "Help me",
-    prompt: `Help me`,
+    label: "ข้อมูล รพ.", // Hospital Info
+    highlight: "สอบถามเกี่ยวกับ", // Tell me about
+    prompt: `สอบถามข้อมูลเกี่ยวกับ`, // Tell me about
     items: [
-      "Help me write a function to reverse a string in JavaScript",
-      "Help me create a responsive navbar in HTML/CSS",
-      "Help me write a SQL query to find duplicate emails",
-      "Help me convert this Python function to JavaScript",
+      "สอบถามเกี่ยวกับเวลาเยี่ยมผู้ป่วยปัจจุบัน", // Tell me about the current visiting hours
+      "สอบถามเกี่ยวกับที่จอดรถและค่าบริการ", // Tell me about parking options and fees
+      "สอบถามเกี่ยวกับที่ตั้งแผนกรังสีวิทยา", // Tell me about the location of the Radiology department
+      "สอบถามเกี่ยวกับสิทธิ์ประกันที่โรงพยาบาลรับ", // Tell me about accepted insurance plans
+      "สอบถามเกี่ยวกับขั้นตอนการขอเวชระเบียน", // Tell me about the process for requesting medical records
     ],
-    icon: Code,
+    icon: HelpCircle, // หรือไอคอน Info
   },
   {
-    label: "Design",
-    highlight: "Design",
-    prompt: `Design`,
+    label: "การสื่อสาร", // Communication
+    highlight: "ฝากข้อความถึง", // Message for
+    prompt: `รับฝากข้อความถึง`, // Take a message for
     items: [
-      "Design a color palette for a tech blog",
-      "Design a UX checklist for mobile apps",
-      "Design 5 great font pairings for a landing page",
-      "Design better CTAs with useful tips",
+      "รับฝากข้อความถึงคุณหมอมิลเลอร์ เรื่องสอบถามผลตรวจคนไข้", // Take a message for Dr. Miller regarding patient results query
+      "รับฝากข้อความถึงพยาบาลพาเทล เรื่องขอใบสั่งยาเพิ่ม", // Take a message for Nurse Patel about a prescription refill
+      "ขอเบอร์ติดต่อตรงแผนกการเงิน", // Find the direct line for the Billing Department
+      "โอนสายไปยังหน่วยกายภาพบำบัด", // Transfer call to the Physical Therapy unit
+      "ตรวจสอบว่าแพทย์ท่านใดอยู่เวรแผนกหัวใจ", // Check who is the on-call physician for Cardiology
     ],
-    icon: PaintBrush,
+    icon: Phone,
   },
   {
-    label: "Research",
-    highlight: "Research",
-    prompt: `Research`,
+    label: "ขั้นตอน", // Procedures
+    highlight: "อธิบายขั้นตอน", // Explain the process for
+    prompt: `อธิบายขั้นตอนสำหรับ`, // Explain the process for
     items: [
-      "Research the pros and cons of remote work",
-      "Research the differences between Apple Vision Pro and Meta Quest",
-      "Research best practices for password security",
-      "Research the latest trends in renewable energy",
+      "อธิบายขั้นตอนการลงทะเบียนผู้ป่วยใหม่", // Explain the process for checking in a new patient
+      "อธิบายขั้นตอนการตรวจเลือด/เจาะเลือด", // Explain the process for getting lab work done
+      "อธิบายขั้นตอนการจำหน่ายผู้ป่วยกลับบ้าน", // Explain the process for patient discharge
+      "อธิบายขั้นตอนการลงทะเบียนก่อนผ่าตัด", // Explain the process for pre-surgery registration
+      "อธิบายขั้นตอนการให้ข้อเสนอแนะหรือร้องเรียน", // Explain the process for providing feedback or complaints
     ],
-    icon: BookOpenText,
+    icon: Clipboard,
   },
   {
-    label: "Get inspired",
-    highlight: "Inspire me",
-    prompt: `Inspire me`,
+    label: "บอกทาง", // Directions
+    highlight: "เส้นทางไป", // Directions to
+    prompt: `บอกเส้นทางไป`, // Provide directions to
     items: [
-      "Inspire me with a beautiful quote about creativity",
-      "Inspire me with a writing prompt about solitude",
-      "Inspire me with a poetic way to start a newsletter",
-      "Inspire me by describing a peaceful morning in nature",
+      "บอกเส้นทางไปโรงอาหารของโรงพยาบาล", // Provide directions to the hospital cafeteria
+      "บอกเส้นทางไปห้องน้ำที่ใกล้ที่สุด", // Provide directions to the nearest restroom
+      "บอกเส้นทางไปทางเข้าแผนกฉุกเฉิน", // Provide directions to the Emergency Department entrance
+      "บอกเส้นทางไปร้านขายยาผู้ป่วยนอก", // Provide directions to the outpatient pharmacy
+      "บอกเส้นทางไปล็อบบี้หลักจากลานจอดรถฝั่งตะวันตก", // Provide directions to the main lobby from the west parking garage
     ],
-    icon: Sparkle,
+    icon: MapPin,
   },
-  {
-    label: "Think deeply",
-    highlight: "Reflect on",
-    prompt: `Reflect on`,
-    items: [
-      "Reflect on why we fear uncertainty",
-      "Reflect on what makes a conversation meaningful",
-      "Reflect on the concept of time in a simple way",
-      "Reflect on what it means to live intentionally",
-    ],
-    icon: Brain,
-  },
-  {
-    label: "Learn gently",
-    highlight: "Explain",
-    prompt: `Explain`,
-    items: [
-      "Explain quantum physics like I'm 10",
-      "Explain stoicism in simple terms",
-      "Explain how a neural network works",
-      "Explain the difference between AI and AGI",
-    ],
-    icon: Lightbulb,
-  },
-]
+];
 
 export const SYSTEM_PROMPT_DEFAULT = `You are Central, a Thai head receptionist. You must give advice and ask for user location to tell user to contact your suborinate by their location. list of your suboridate is 
   "Phayathai 1": "ไลร่ำ พยาบาลพญาไท 1" : ถนนศรีอยุธยา แขวงถนนพญาไท เขตราชเทวี กรุงเทพฯ ใกล้อนุสาวรีย์ชัยสมรภูมิและสถานี BTS พญาไท call 0-2201-4600 or 1772 ,
