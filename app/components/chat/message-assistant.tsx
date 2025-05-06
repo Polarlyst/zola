@@ -7,13 +7,14 @@ import {
 } from "@/components/prompt-kit/message"
 import { cn } from "@/lib/utils"
 import type { Message as MessageAISDK } from "@ai-sdk/react"
-import type { ToolInvocationUIPart } from "@ai-sdk/ui-utils" // <-- Added import
 import { ArrowClockwise, Check, Copy } from "@phosphor-icons/react"
 import { CalendarCard, CalendarEventData } from "./calendar-card"
 import { getSources } from "./get-sources"
 import { SourcesList } from "./sources-list"
-// Ensure this import points to your *rendering* component, not a type
 import { ToolInvocation as ToolInvocationComponent } from "./tool-invocation"
+
+// Define a helper type for a single part element from the 'parts' array
+type MessagePart = NonNullable<MessageAISDK["parts"]>[number];
 
 type MessageAssistantProps = {
   children: string
@@ -25,9 +26,10 @@ type MessageAssistantProps = {
   parts?: MessageAISDK["parts"]
 }
 
-// Type predicate function
-function isToolInvocationUIPart(part: MessageAISDK['parts'][number]): part is ToolInvocationUIPart {
-  return part.type === 'tool-invocation';
+// Type predicate function - Check if the part is a tool invocation
+function isToolInvocationPart(part: MessagePart): part is Extract<MessagePart, { type: 'tool-invocation' }> {
+  // Check if the part has a 'toolInvocation' property before accessing it
+  return part.type === 'tool-invocation' && 'toolInvocation' in part && part.toolInvocation != null;
 }
 
 // Helper function to find calendar event data from tool invocation results
@@ -73,9 +75,10 @@ export function MessageAssistant({
   const calendarEvent = findCalendarEvent(parts)
 
   // Filter tool invocation parts *other than* scheduleEvent using the type predicate
+  // Ensure parts exists before filtering
   const otherToolInvocationParts = parts
-    ?.filter(isToolInvocationUIPart) // <-- Use the type predicate here
-    ?.filter(part => part.toolInvocation.toolName !== 'scheduleEvent'); // Filter by name *after* ensuring type
+    ?.filter(isToolInvocationPart) // Use the refined type predicate
+    ?.filter(part => part.toolInvocation.toolName !== 'scheduleEvent'); // Now safe to access toolInvocation
 
   const contentNullOrEmpty = children === null || children.trim() === ""
 
@@ -88,17 +91,16 @@ export function MessageAssistant({
     >
       {/* 1. Render other Tool Invocations */}
       {otherToolInvocationParts && otherToolInvocationParts.length > 0 && (
-        // Now TypeScript should understand the type is ToolInvocationUIPart[]
-        // Ensure ToolInvocationComponent accepts this type or a compatible one
+        // Pass the filtered parts - type should be correctly narrowed now
         <ToolInvocationComponent data={otherToolInvocationParts} />
       )}
 
       {/* 2. Render the main text response if it exists */}
       {!contentNullOrEmpty && (
-        <div className="flex w-full items-start gap-2">
+        <div className="flex w-full items-start gap-2"> {/* Keep text and actions horizontal */}
           <MessageContent
             className={cn(
-              "prose dark:prose-invert relative min-w-0 flex-1 bg-transparent p-0",
+              "prose dark:prose-invert relative min-w-0 flex-1 bg-transparent p-0", // Use flex-1 to allow actions to align right
               "prose-h1:scroll-m-20 prose-h1:text-2xl prose-h1:font-semibold prose-h2:mt-8 prose-h2:scroll-m-20 prose-h2:text-xl prose-h2:mb-3 prose-h2:font-medium prose-h3:scroll-m-20 prose-h3:text-base prose-h3:font-medium prose-h4:scroll-m-20 prose-h5:scroll-m-20 prose-h6:scroll-m-20 prose-strong:font-medium prose-table:block prose-table:overflow-y-auto"
             )}
             markdown={true}
@@ -144,14 +146,14 @@ export function MessageAssistant({
 
       {/* 3. Render Calendar Card if event data exists */}
       {calendarEvent && (
-        <div className="w-full">
+        <div className="w-full"> {/* Ensure card takes appropriate width */}
             <CalendarCard eventData={calendarEvent} />
         </div>
       )}
 
       {/* 4. Render Sources List */}
       {sources && sources.length > 0 && (
-         <div className="w-full">
+         <div className="w-full"> {/* Ensure sources list takes appropriate width */}
              <SourcesList sources={sources} />
          </div>
       )}
