@@ -6,8 +6,8 @@ import {
   MessageContent,
 } from "@/components/prompt-kit/message"
 import { cn } from "@/lib/utils"
-// Remove ToolInvocation from the import - rely on the structure within MessageAISDK
 import type { Message as MessageAISDK } from "@ai-sdk/react"
+import type { ToolInvocationUIPart } from "@ai-sdk/ui-utils" // <-- Added import
 import { ArrowClockwise, Check, Copy } from "@phosphor-icons/react"
 import { CalendarCard, CalendarEventData } from "./calendar-card"
 import { getSources } from "./get-sources"
@@ -25,31 +25,30 @@ type MessageAssistantProps = {
   parts?: MessageAISDK["parts"]
 }
 
+// Type predicate function
+function isToolInvocationUIPart(part: MessageAISDK['parts'][number]): part is ToolInvocationUIPart {
+  return part.type === 'tool-invocation';
+}
+
 // Helper function to find calendar event data from tool invocation results
 const findCalendarEvent = (parts?: MessageAISDK["parts"]): CalendarEventData | null => {
   if (!parts) return null;
 
-  // Find the part corresponding to the 'scheduleEvent' tool call result
   const scheduleToolPart = parts.find(part =>
-    part.type === 'tool-invocation' && // Check the part type
-    part.toolInvocation?.toolName === 'scheduleEvent' && // Access toolInvocation safely
-    part.toolInvocation?.state === 'result' // Check the state
+    part.type === 'tool-invocation' &&
+    part.toolInvocation?.toolName === 'scheduleEvent' &&
+    part.toolInvocation?.state === 'result'
   );
 
-  // Check if the part exists and is the correct type *with* the result state
   if (scheduleToolPart?.type === 'tool-invocation' && scheduleToolPart.toolInvocation?.state === 'result') {
-     // Access the nested toolInvocation object
      const toolInvocation = scheduleToolPart.toolInvocation;
 
-     // We can now safely access .result because state is 'result'
      if (toolInvocation.result?.success && toolInvocation.result?.eventDetails) {
        const eventDetails = toolInvocation.result.eventDetails as any;
-       // Basic validation to ensure it looks like our event data
        if (eventDetails.title && eventDetails.date && eventDetails.startTime) {
            return eventDetails as CalendarEventData;
        }
      }
-     // Alternative check if args hold the data
      else if (toolInvocation.args) {
          const args = toolInvocation.args as any;
          if (args.title && args.date && args.startTime) {
@@ -57,11 +56,7 @@ const findCalendarEvent = (parts?: MessageAISDK["parts"]): CalendarEventData | n
          }
      }
   }
-
-  // --- Optional: Fallback for Structured JSON in Text (less reliable) ---
-  /* ... keep your JSON parsing logic here if needed ... */
-
-  return null; // No valid calendar event data found
+  return null;
 }
 
 
@@ -77,10 +72,10 @@ export function MessageAssistant({
   const sources = getSources(parts)
   const calendarEvent = findCalendarEvent(parts)
 
-  // Filter tool invocation parts *other than* scheduleEvent
-  const otherToolInvocationParts = parts?.filter(part =>
-      part.type === 'tool-invocation' && part.toolInvocation?.toolName !== 'scheduleEvent'
-  );
+  // Filter tool invocation parts *other than* scheduleEvent using the type predicate
+  const otherToolInvocationParts = parts
+    ?.filter(isToolInvocationUIPart) // <-- Use the type predicate here
+    ?.filter(part => part.toolInvocation.toolName !== 'scheduleEvent'); // Filter by name *after* ensuring type
 
   const contentNullOrEmpty = children === null || children.trim() === ""
 
@@ -93,13 +88,14 @@ export function MessageAssistant({
     >
       {/* 1. Render other Tool Invocations */}
       {otherToolInvocationParts && otherToolInvocationParts.length > 0 && (
-        // Pass the filtered parts
+        // Now TypeScript should understand the type is ToolInvocationUIPart[]
+        // Ensure ToolInvocationComponent accepts this type or a compatible one
         <ToolInvocationComponent data={otherToolInvocationParts} />
       )}
 
       {/* 2. Render the main text response if it exists */}
       {!contentNullOrEmpty && (
-        <div className="flex w-full items-start gap-2"> {/* Keep text and actions horizontal */}
+        <div className="flex w-full items-start gap-2">
           <MessageContent
             className={cn(
               "prose dark:prose-invert relative min-w-0 flex-1 bg-transparent p-0",
