@@ -6,12 +6,13 @@ import {
   MessageContent,
 } from "@/components/prompt-kit/message"
 import { cn } from "@/lib/utils"
-import type { Message as MessageAISDK, ToolCallPart, ToolInvocation, ToolResultPart } from "@ai-sdk/react" // Import specific part types
+// Remove ToolCallPart and ToolResultPart from the import
+import type { Message as MessageAISDK, ToolInvocation } from "@ai-sdk/react"
 import { ArrowClockwise, Check, Copy } from "@phosphor-icons/react"
-import { CalendarCard, CalendarEventData } from "./calendar-card" // Import the CalendarCard component and type
+import { CalendarCard, CalendarEventData } from "./calendar-card"
 import { getSources } from "./get-sources"
 import { SourcesList } from "./sources-list"
-import { ToolInvocation as ToolInvocationComponent } from "./tool-invocation" // Import the rendering component
+import { ToolInvocation as ToolInvocationComponent } from "./tool-invocation"
 
 type MessageAssistantProps = {
   children: string
@@ -34,9 +35,9 @@ const findCalendarEvent = (parts?: MessageAISDK["parts"]): CalendarEventData | n
     part.toolInvocation.state === 'result' // Explicitly check for the 'result' state
   );
 
-  // Ensure the part exists and is indeed a tool invocation with a result
-  if (scheduleToolPart && scheduleToolPart.type === 'tool-invocation' && scheduleToolPart.toolInvocation.state === 'result') {
-     const toolInvocation = scheduleToolPart.toolInvocation; // Now TS knows state is 'result'
+  // Check if the part exists and is the correct type *with* the result state
+  if (scheduleToolPart?.type === 'tool-invocation' && scheduleToolPart.toolInvocation.state === 'result') {
+     const toolInvocation = scheduleToolPart.toolInvocation; // TS now knows state is 'result'
 
      // Check if the result object contains the event details
      // Adjust the path based on how your tool's `execute` function returns data
@@ -49,12 +50,12 @@ const findCalendarEvent = (parts?: MessageAISDK["parts"]): CalendarEventData | n
        }
      }
      // Alternative check if args hold the data (might not be needed if result always has it)
-     // else if (toolInvocation.args) {
-     //     const args = toolInvocation.args as any;
-     //     if (args.title && args.date && args.startTime) {
-     //        return args as CalendarEventData;
-     //     }
-     // }
+     else if (toolInvocation.args) {
+         const args = toolInvocation.args as any;
+         if (args.title && args.date && args.startTime) {
+            return args as CalendarEventData;
+         }
+     }
   }
 
   // --- Optional: Fallback for Structured JSON in Text (less reliable) ---
@@ -74,14 +75,12 @@ export function MessageAssistant({
   parts,
 }: MessageAssistantProps) {
   const sources = getSources(parts)
-  const calendarEvent = findCalendarEvent(parts) // <-- Check for calendar data
+  const calendarEvent = findCalendarEvent(parts)
 
-  // Filter tool invocation parts *other than* scheduleEvent if it's handled by CalendarCard
-  // Use type assertion here to satisfy TypeScript if needed, or filter more carefully
-  const otherToolInvocationParts = parts?.filter(
-    (part): part is ToolCallPart | ToolResultPart => // Type guard
-      part.type === "tool-invocation" && part.toolInvocation.toolName !== 'scheduleEvent'
-  )
+  // Filter tool invocation parts *other than* scheduleEvent
+  const otherToolInvocationParts = parts?.filter(part =>
+      part.type === 'tool-invocation' && part.toolInvocation.toolName !== 'scheduleEvent'
+  );
 
   const contentNullOrEmpty = children === null || children.trim() === ""
 
@@ -95,8 +94,7 @@ export function MessageAssistant({
     >
       {/* 1. Render other Tool Invocations */}
       {otherToolInvocationParts && otherToolInvocationParts.length > 0 && (
-        // Pass the filtered parts to your ToolInvocation rendering component
-        // Assuming ToolInvocationComponent expects this structure
+        // Pass the filtered parts (type will be inferred correctly by TS now)
         <ToolInvocationComponent data={otherToolInvocationParts} />
       )}
 
