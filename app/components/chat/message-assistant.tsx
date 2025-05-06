@@ -6,12 +6,13 @@ import {
   MessageContent,
 } from "@/components/prompt-kit/message"
 import { cn } from "@/lib/utils"
-// Remove ToolCallPart and ToolResultPart from the import
-import type { Message as MessageAISDK, ToolInvocation } from "@ai-sdk/react"
+// Remove ToolInvocation from the import - rely on the structure within MessageAISDK
+import type { Message as MessageAISDK } from "@ai-sdk/react"
 import { ArrowClockwise, Check, Copy } from "@phosphor-icons/react"
 import { CalendarCard, CalendarEventData } from "./calendar-card"
 import { getSources } from "./get-sources"
 import { SourcesList } from "./sources-list"
+// Ensure this import points to your *rendering* component, not a type
 import { ToolInvocation as ToolInvocationComponent } from "./tool-invocation"
 
 type MessageAssistantProps = {
@@ -30,18 +31,17 @@ const findCalendarEvent = (parts?: MessageAISDK["parts"]): CalendarEventData | n
 
   // Find the part corresponding to the 'scheduleEvent' tool call result
   const scheduleToolPart = parts.find(part =>
-    part.type === 'tool-invocation' &&
-    part.toolInvocation.toolName === 'scheduleEvent' &&
-    part.toolInvocation.state === 'result' // Explicitly check for the 'result' state
+    part.type === 'tool-invocation' && // Check the part type
+    part.toolInvocation?.toolName === 'scheduleEvent' && // Access toolInvocation safely
+    part.toolInvocation?.state === 'result' // Check the state
   );
 
   // Check if the part exists and is the correct type *with* the result state
-  if (scheduleToolPart?.type === 'tool-invocation' && scheduleToolPart.toolInvocation.state === 'result') {
-     const toolInvocation = scheduleToolPart.toolInvocation; // TS now knows state is 'result'
+  if (scheduleToolPart?.type === 'tool-invocation' && scheduleToolPart.toolInvocation?.state === 'result') {
+     // Access the nested toolInvocation object
+     const toolInvocation = scheduleToolPart.toolInvocation;
 
-     // Check if the result object contains the event details
-     // Adjust the path based on how your tool's `execute` function returns data
-     // We safely access .result because we checked the state
+     // We can now safely access .result because state is 'result'
      if (toolInvocation.result?.success && toolInvocation.result?.eventDetails) {
        const eventDetails = toolInvocation.result.eventDetails as any;
        // Basic validation to ensure it looks like our event data
@@ -49,7 +49,7 @@ const findCalendarEvent = (parts?: MessageAISDK["parts"]): CalendarEventData | n
            return eventDetails as CalendarEventData;
        }
      }
-     // Alternative check if args hold the data (might not be needed if result always has it)
+     // Alternative check if args hold the data
      else if (toolInvocation.args) {
          const args = toolInvocation.args as any;
          if (args.title && args.date && args.startTime) {
@@ -79,7 +79,7 @@ export function MessageAssistant({
 
   // Filter tool invocation parts *other than* scheduleEvent
   const otherToolInvocationParts = parts?.filter(part =>
-      part.type === 'tool-invocation' && part.toolInvocation.toolName !== 'scheduleEvent'
+      part.type === 'tool-invocation' && part.toolInvocation?.toolName !== 'scheduleEvent'
   );
 
   const contentNullOrEmpty = children === null || children.trim() === ""
@@ -87,14 +87,13 @@ export function MessageAssistant({
   return (
     <Message
       className={cn(
-        // Use flex-col to stack elements vertically
         "group flex w-full max-w-3xl flex-col items-start gap-2 px-6 pb-2",
         hasScrollAnchor && "min-h-scroll-anchor"
       )}
     >
       {/* 1. Render other Tool Invocations */}
       {otherToolInvocationParts && otherToolInvocationParts.length > 0 && (
-        // Pass the filtered parts (type will be inferred correctly by TS now)
+        // Pass the filtered parts
         <ToolInvocationComponent data={otherToolInvocationParts} />
       )}
 
@@ -103,7 +102,7 @@ export function MessageAssistant({
         <div className="flex w-full items-start gap-2"> {/* Keep text and actions horizontal */}
           <MessageContent
             className={cn(
-              "prose dark:prose-invert relative min-w-0 flex-1 bg-transparent p-0", // Use flex-1 to allow actions to align right
+              "prose dark:prose-invert relative min-w-0 flex-1 bg-transparent p-0",
               "prose-h1:scroll-m-20 prose-h1:text-2xl prose-h1:font-semibold prose-h2:mt-8 prose-h2:scroll-m-20 prose-h2:text-xl prose-h2:mb-3 prose-h2:font-medium prose-h3:scroll-m-20 prose-h3:text-base prose-h3:font-medium prose-h4:scroll-m-20 prose-h5:scroll-m-20 prose-h6:scroll-m-20 prose-strong:font-medium prose-table:block prose-table:overflow-y-auto"
             )}
             markdown={true}
@@ -149,14 +148,14 @@ export function MessageAssistant({
 
       {/* 3. Render Calendar Card if event data exists */}
       {calendarEvent && (
-        <div className="w-full"> {/* Ensure card takes appropriate width */}
+        <div className="w-full">
             <CalendarCard eventData={calendarEvent} />
         </div>
       )}
 
       {/* 4. Render Sources List */}
       {sources && sources.length > 0 && (
-         <div className="w-full"> {/* Ensure sources list takes appropriate width */}
+         <div className="w-full">
              <SourcesList sources={sources} />
          </div>
       )}
