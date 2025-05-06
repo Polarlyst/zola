@@ -6,12 +6,12 @@ import {
   MessageContent,
 } from "@/components/prompt-kit/message"
 import { cn } from "@/lib/utils"
-import type { Message as MessageAISDK } from "@ai-sdk/react"
+import type { Message as MessageAISDK, ToolCallPart, ToolInvocation, ToolResultPart } from "@ai-sdk/react" // Import specific part types
 import { ArrowClockwise, Check, Copy } from "@phosphor-icons/react"
-import { CalendarCard, CalendarEventData } from "./calendar-card" // <-- Import the CalendarCard component and type
+import { CalendarCard, CalendarEventData } from "./calendar-card" // Import the CalendarCard component and type
 import { getSources } from "./get-sources"
 import { SourcesList } from "./sources-list"
-import { ToolInvocation } from "./tool-invocation" // <-- Import ToolInvocation
+import { ToolInvocation as ToolInvocationComponent } from "./tool-invocation" // Import the rendering component
 
 type MessageAssistantProps = {
   children: string
@@ -31,53 +31,34 @@ const findCalendarEvent = (parts?: MessageAISDK["parts"]): CalendarEventData | n
   const scheduleToolPart = parts.find(part =>
     part.type === 'tool-invocation' &&
     part.toolInvocation.toolName === 'scheduleEvent' &&
-    // Check if the result exists (state could be 'result' or it might just have the result property)
-    (part.toolInvocation.state === 'result' || (part.toolInvocation as any).result !== undefined)
+    part.toolInvocation.state === 'result' // Explicitly check for the 'result' state
   );
 
-  if (scheduleToolPart && scheduleToolPart.type === 'tool-invocation') {
-     const toolInvocation = scheduleToolPart.toolInvocation;
+  // Ensure the part exists and is indeed a tool invocation with a result
+  if (scheduleToolPart && scheduleToolPart.type === 'tool-invocation' && scheduleToolPart.toolInvocation.state === 'result') {
+     const toolInvocation = scheduleToolPart.toolInvocation; // Now TS knows state is 'result'
 
      // Check if the result object contains the event details
      // Adjust the path based on how your tool's `execute` function returns data
+     // We safely access .result because we checked the state
      if (toolInvocation.result?.success && toolInvocation.result?.eventDetails) {
-       // Basic validation to ensure it looks like our event data
        const eventDetails = toolInvocation.result.eventDetails as any;
+       // Basic validation to ensure it looks like our event data
        if (eventDetails.title && eventDetails.date && eventDetails.startTime) {
            return eventDetails as CalendarEventData;
        }
      }
-     // Alternative: Check if the arguments themselves hold the data (if execute just confirms)
-     else if (toolInvocation.args) {
-         const args = toolInvocation.args as any;
-         if (args.title && args.date && args.startTime) {
-            return args as CalendarEventData;
-         }
-     }
+     // Alternative check if args hold the data (might not be needed if result always has it)
+     // else if (toolInvocation.args) {
+     //     const args = toolInvocation.args as any;
+     //     if (args.title && args.date && args.startTime) {
+     //        return args as CalendarEventData;
+     //     }
+     // }
   }
 
   // --- Optional: Fallback for Structured JSON in Text (less reliable) ---
-  /*
-  const textPart = parts.find(part => part.type === 'text');
-  if (textPart && textPart.type === 'text') {
-    try {
-      // Attempt to find and parse JSON matching the calendar event structure
-      const jsonMatch = textPart.text.match(/{\s*"type"\s*:\s*"calendarEvent"[\s\S]*?}/);
-      if (jsonMatch) {
-        const potentialJson = JSON.parse(jsonMatch[0]);
-        if (potentialJson.type === 'calendarEvent' && potentialJson.data) {
-          // Add more validation if needed
-          if (potentialJson.data.title && potentialJson.data.date && potentialJson.data.startTime) {
-              return potentialJson.data as CalendarEventData;
-          }
-        }
-      }
-    } catch (e) {
-      // Ignore JSON parsing errors
-      console.warn("Could not parse potential calendar JSON in text:", e);
-    }
-  }
-  */
+  /* ... keep your JSON parsing logic here if needed ... */
 
   return null; // No valid calendar event data found
 }
@@ -95,10 +76,11 @@ export function MessageAssistant({
   const sources = getSources(parts)
   const calendarEvent = findCalendarEvent(parts) // <-- Check for calendar data
 
-  // Filter tool invocation parts, optionally excluding the scheduleEvent tool
-  // if you handle it separately with the CalendarCard
-  const toolInvocationParts = parts?.filter(
-    (part) => part.type === "tool-invocation" && part.toolInvocation.toolName !== 'scheduleEvent'
+  // Filter tool invocation parts *other than* scheduleEvent if it's handled by CalendarCard
+  // Use type assertion here to satisfy TypeScript if needed, or filter more carefully
+  const otherToolInvocationParts = parts?.filter(
+    (part): part is ToolCallPart | ToolResultPart => // Type guard
+      part.type === "tool-invocation" && part.toolInvocation.toolName !== 'scheduleEvent'
   )
 
   const contentNullOrEmpty = children === null || children.trim() === ""
@@ -111,9 +93,11 @@ export function MessageAssistant({
         hasScrollAnchor && "min-h-scroll-anchor"
       )}
     >
-      {/* 1. Render Tool Invocations (excluding scheduleEvent if handled separately) */}
-      {toolInvocationParts && toolInvocationParts.length > 0 && (
-        <ToolInvocation data={toolInvocationParts} />
+      {/* 1. Render other Tool Invocations */}
+      {otherToolInvocationParts && otherToolInvocationParts.length > 0 && (
+        // Pass the filtered parts to your ToolInvocation rendering component
+        // Assuming ToolInvocationComponent expects this structure
+        <ToolInvocationComponent data={otherToolInvocationParts} />
       )}
 
       {/* 2. Render the main text response if it exists */}
