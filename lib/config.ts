@@ -47,7 +47,7 @@ export type Model = {
 export const MODELS_FREE = [
   {
     id: "gpt-4.1-nano",
-    name: "GPT-4.1 Nano",
+    name: "Invitrace AI",
     provider: "openai",
     features: [
       {
@@ -58,7 +58,7 @@ export const MODELS_FREE = [
     api_sdk: openproviders("gpt-4.1-nano"),
     description:
       "Ultra fast and cheap. Ideal for simple tasks, summaries, or classification.",
-    icon: OpenAI,
+    
   },
 ]
 
