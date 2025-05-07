@@ -143,7 +143,7 @@ export const PROVIDERS = [
   },
 ] as Provider[]
 
-export const MODEL_DEFAULT = "pixtral-large-latest"
+export const MODEL_DEFAULT = "gpt-4.1-nano"
 
 export const APP_NAME = "Central"
 export const APP_DOMAIN = "https://zola.chat"
