@@ -46,7 +46,7 @@ const HospitalIcon = ({
     */}
   </svg>
 )
-export default Icon
+export default OpenAI
 
 // How to use it:
 // import HospitalIcon from './HospitalIcon'; // Adjust path as needed
