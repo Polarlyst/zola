@@ -58,7 +58,7 @@ export const MODELS_FREE = [
     api_sdk: openproviders("gpt-4.1-nano"),
     description:
       "Ultra fast and cheap. Ideal for simple tasks, summaries, or classification.",
-    
+  icon: OpenAI,  
   },
 ]
 
